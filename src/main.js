@@ -1,16 +1,102 @@
 import './style.css';
-const page=document.body.dataset.page;
-const links=[['inicio','/','Inicio'],['nosotros','/quienes-somos/','Quiénes somos'],['soluciones','/soluciones/','Soluciones'],['ventajas','/ventajas/','Ventajas'],['contacto','/contacto/','Contacto']];
-document.querySelector('#site-header').innerHTML=`<header class="site-header"><div class="topbar"><span>Tula de Allende, Hidalgo</span><a href="tel:+525539194580">55 3919 4580</a></div><nav class="nav container"><a class="brand" href="/" aria-label="CEAH inicio"><img src="/logo-transparent.png" alt="CEAH"></a><button class="menu-toggle" aria-expanded="false" aria-label="Abrir menú"><i></i><i></i></button><div class="nav-links">${links.map(([id,url,label])=>`<a href="${url}" class="${page===id?'active':''}">${label}</a>`).join('')}<a class="nav-cta magnetic" href="/contacto/">Cotizar proyecto</a></div></nav></header>`;
-document.querySelector('#site-footer').innerHTML=`<footer class="footer"><div class="container footer-grid"><div class="footer-brand"><img src="/logo-transparent.png" alt="CEAH"><p>Compuestos Estructurales Autopinturas de Hidalgo</p></div><div><b>Explorar</b>${links.slice(1).map(([,u,l])=>`<a href="${u}">${l}</a>`).join('')}</div><div><b>Contacto</b><a href="tel:+525539194580">55 3919 4580</a><a href="tel:+525578528045">55 7852 8045</a><a href="mailto:ventas@ceahesteuctural.com.mx">ventas@ceahesteuctural.com.mx</a></div></div><div class="container footer-bottom"><span>© ${new Date().getFullYear()} CEAH</span><a href="https://partumdesign.com.mx" target="_blank" rel="noopener">Desarrollado por Partum Design</a></div></footer><a class="whatsapp" href="https://wa.me/525539194580?text=Hola%20CEAH,%20me%20gustaría%20recibir%20información" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>`;
-const toggle=document.querySelector('.menu-toggle'),nav=document.querySelector('.nav-links');
-toggle.onclick=()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));nav.classList.toggle('open');document.body.classList.toggle('menu-open')};
-const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
-const extras={inicio:`<section class="industry-areas section"><div class="container"><div class="impact-title assemble"><span>Áreas de</span><strong>Aplicación</strong></div><div class="industry-grid"><article class="industry-tile assemble from-left"><span>01</span><h3>Industria</h3><p>Soluciones para instalaciones expuestas a humedad, corrosión y agentes químicos.</p></article><article class="industry-tile assemble from-bottom"><span>02</span><h3>Construcción</h3><p>Materiales resistentes, durables y adaptables a las necesidades de cada proyecto.</p></article><article class="industry-tile assemble from-right"><span>03</span><h3>Infraestructura</h3><p>Suministro de materiales estructurales y coordinación logística.</p></article></div></div></section>`,nosotros:`<section class="editorial-band section"><div class="container editorial-grid"><div class="impact-title assemble"><span>Nuestra</span><strong>Forma de trabajar</strong></div><div class="editorial-copy assemble from-right"><p>El acompañamiento inicia con la definición de las necesidades del proyecto y continúa con la selección de soluciones, los sistemas de fijación, la coordinación logística y la entrega.</p><p>La atención personalizada permite orientar cada propuesta a las condiciones reales de la aplicación.</p></div></div></section>`,soluciones:`<section class="applications section"><div class="container"><div class="impact-title assemble"><span>Selección</span><strong>Por proyecto</strong></div><div class="application-list"><div class="assemble from-left"><b>01</b><h3>Condiciones del entorno</h3><p>Corrosión, humedad y exposición a agentes químicos.</p></div><div class="assemble from-right"><b>02</b><h3>Necesidades estructurales</h3><p>Soluciones resistentes, durables y adaptables.</p></div><div class="assemble from-left"><b>03</b><h3>Instalación y logística</h3><p>Sistemas de fijación, suministro y coordinación hasta la entrega.</p></div></div></div></section>`,ventajas:`<section class="editorial-band yellow-band section"><div class="container editorial-grid"><div class="impact-title assemble"><span>Menos</span><strong>Costo de conservación</strong></div><div class="editorial-copy assemble from-right"><p>La resistencia a la corrosión, la larga vida útil, el bajo peso y el mínimo mantenimiento ayudan a reducir costos de conservación y reemplazo, así como a incrementar la durabilidad de las instalaciones.</p></div></div></section>`,contacto:`<section class="contact-process section"><div class="container"><div class="impact-title assemble"><span>Del primer</span><strong>Contacto a la entrega</strong></div><div class="process-line"><span class="assemble from-left">Definición de necesidades</span><span class="assemble from-bottom">Selección de soluciones</span><span class="assemble from-right">Coordinación logística</span></div></div></section>`};
-const main=document.querySelector('main');if(extras[page])main.insertAdjacentHTML('beforeend',extras[page]);
-const assemblyObserver=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('assembled');assemblyObserver.unobserve(e.target)}}),{threshold:.15});document.querySelectorAll('.assemble').forEach((el,i)=>{el.style.setProperty('--delay',`${(i%4)*90}ms`);assemblyObserver.observe(el)});
-window.addEventListener('load',()=>setTimeout(()=>document.querySelector('.preloader')?.classList.add('done'),350));
-window.addEventListener('scroll',()=>{document.querySelectorAll('.parallax').forEach(el=>{el.style.transform=`translate3d(0,${scrollY*Number(el.dataset.speed||.05)}px,0)`});document.querySelector('.site-header')?.classList.toggle('scrolled',scrollY>40)},{passive:true});
-document.querySelectorAll('.parallax-hover').forEach(img=>{const box=img.parentElement;box.addEventListener('pointermove',e=>{if(innerWidth<800)return;const r=box.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;img.style.transform=`scale(1.06) translate(${x*-12}px,${y*-12}px)`});box.addEventListener('pointerleave',()=>img.style.transform='')});
-document.querySelectorAll('.magnetic').forEach(el=>{el.addEventListener('pointermove',e=>{if(innerWidth<800)return;const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.12}px,${(e.clientY-r.top-r.height/2)*.12}px)`});el.addEventListener('pointerleave',()=>el.style.transform='')});
-const form=document.querySelector('#contact-form');if(form)form.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(form),s=encodeURIComponent(`Solicitud web CEAH · ${d.get('empresa')||d.get('nombre')}`),b=encodeURIComponent(`Nombre: ${d.get('nombre')}\nEmpresa: ${d.get('empresa')}\nCorreo: ${d.get('correo')}\nSolución: ${d.get('solucion')}\n\nMensaje:\n${d.get('mensaje')}`);location.href=`mailto:ventas@ceahesteuctural.com.mx?subject=${s}&body=${b}`});
+
+const page = document.body.dataset.page || 'inicio';
+const links = [
+  ['inicio', '/', 'Inicio'],
+  ['nosotros', '/quienes-somos/', 'Quiénes somos'],
+  ['soluciones', '/soluciones/', 'Soluciones'],
+  ['ventajas', '/ventajas/', 'Ventajas'],
+  ['contacto', '/contacto/', 'Contacto'],
+];
+
+document.querySelector('#site-header').innerHTML = `
+  <header class="site-header">
+    <div class="topbar">
+      <span>Soluciones estructurales para ambientes exigentes</span>
+      <span>Hidalgo · Jalisco</span>
+    </div>
+    <nav class="nav container" aria-label="Navegación principal">
+      <a class="brand" href="/" aria-label="CEAH, inicio">
+        <img src="/logo-transparent.png" alt="CEAH">
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Abrir menú">
+        <span></span><span></span>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        ${links.map(([id, url, label]) => `<a href="${url}" class="${page === id ? 'active' : ''}">${label}</a>`).join('')}
+        <a class="nav-cta" href="/contacto/">Solicitar cotización</a>
+      </div>
+    </nav>
+  </header>`;
+
+document.querySelector('#site-footer').innerHTML = `
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="/logo-transparent.png" alt="CEAH">
+        <p>Compuestos Estructurales Autopinturas de Hidalgo. Soluciones en materiales compuestos y sistemas especializados.</p>
+      </div>
+      <div>
+        <b>Explorar</b>
+        ${links.slice(1).map(([, url, label]) => `<a href="${url}">${label}</a>`).join('')}
+      </div>
+      <div>
+        <b>Contacto</b>
+        <a href="mailto:ventas@ceahestrcutrales.com">ventas@ceahestrcutrales.com</a>
+        <a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a>
+        <a href="/contacto/">Tula de Allende, Hidalgo</a>
+        <a href="/contacto/">La Venta del Astillero, Jalisco</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© ${new Date().getFullYear()} CEAH</span>
+      <a href="https://partumdesign.com.mx" target="_blank" rel="noopener">Desarrollado por Partum Design</a>
+    </div>
+  </footer>`;
+
+const menuToggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('.nav-links');
+const closeMenu = () => {
+  menuToggle?.setAttribute('aria-expanded', 'false');
+  nav?.classList.remove('open');
+  document.body.classList.remove('menu-open');
+};
+menuToggle?.addEventListener('click', () => {
+  const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+  menuToggle.setAttribute('aria-expanded', String(!isOpen));
+  nav?.classList.toggle('open', !isOpen);
+  document.body.classList.toggle('menu-open', !isOpen);
+});
+nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+
+const revealObserver = new IntersectionObserver((entries, observer) => {
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    observer.unobserve(entry.target);
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+
+window.addEventListener('load', () => {
+  window.setTimeout(() => document.querySelector('.preloader')?.classList.add('done'), 300);
+});
+
+const header = document.querySelector('.site-header');
+window.addEventListener('scroll', () => header?.classList.toggle('scrolled', window.scrollY > 30), { passive: true });
+
+const form = document.querySelector('#contact-form');
+form?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const data = new FormData(form);
+  const subject = encodeURIComponent(`Solicitud web CEAH · ${data.get('empresa') || data.get('nombre')}`);
+  const body = encodeURIComponent([
+    `Nombre: ${data.get('nombre')}`,
+    `Empresa: ${data.get('empresa') || 'No indicada'}`,
+    `Correo: ${data.get('correo')}`,
+    `Solución: ${data.get('solucion')}`,
+    '',
+    `Mensaje: ${data.get('mensaje')}`,
+  ].join('\n'));
+  window.location.href = `mailto:ventas@ceahestrcutrales.com?subject=${subject}&body=${body}`;
+});
