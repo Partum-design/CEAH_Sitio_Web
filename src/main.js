@@ -1,3 +1,12 @@
+import '@fontsource/anton/latin-400.css';
+import '@fontsource/oswald/latin-400.css';
+import '@fontsource/oswald/latin-500.css';
+import '@fontsource/oswald/latin-600.css';
+import '@fontsource/poppins/latin-300.css';
+import '@fontsource/poppins/latin-300-italic.css';
+import '@fontsource/poppins/latin-400.css';
+import '@fontsource/poppins/latin-400-italic.css';
+import '@fontsource/poppins/latin-500.css';
 import './style.css';
 
 document.documentElement.classList.add('js');
@@ -33,50 +42,39 @@ const icons = {
   pin: '<path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
   phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
   target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  'arrow-up': '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  'arrow-down': '<path d="M12 5v14M6 13l6 6 6-6"/>',
   eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 };
 const svg = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${icons[name] || ''}</svg>`;
 
 document.querySelector('#site-header').innerHTML = `
   <header class="site-header">
-    <div class="topbar">
-      <div class="container">
-        <span>Soluciones estructurales en FRP y PVC para ambientes exigentes</span>
-        <div class="topbar-meta">
-          <span>${svg('pin')}Hidalgo · Jalisco</span>
-          <a href="mailto:ventas@ceahestrcutrales.com"><span>${svg('mail')}ventas@ceahestrcutrales.com</span></a>
+    <nav class="nav container" aria-label="Navegación principal">
+      <a class="brand" href="/" aria-label="CEAH, inicio">
+        <img src="/logo-light.webp" alt="CEAH">
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Abrir menú">
+        Menú <span class="bars"><span></span><span></span></span>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        <div class="menu-main">
+          ${links.map(([id, url, label]) => `<a href="${url}" class="${page === id ? 'active' : ''}"${page === id ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
+        </div>
+        <div class="menu-side">
+          <div><h4>Escríbenos</h4><a href="mailto:ventas@ceahestrcutrales.com">ventas@ceahestrcutrales.com</a><a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a></div>
+          <div><h4>Ubicaciones</h4><p>Tula de Allende, Hidalgo</p><p>La Venta del Astillero, Jalisco</p></div>
+          <a class="btn dark" href="/contacto/">Solicitar cotización ${svg('arrow')}</a>
         </div>
       </div>
-    </div>
-    <div class="nav-wrap">
-      <nav class="nav container" aria-label="Navegación principal">
-        <a class="brand" href="/" aria-label="CEAH, inicio">
-          <img src="/logo-transparent.webp" alt="CEAH">
-        </a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Abrir menú">
-          <span></span><span></span>
-        </button>
-        <div class="nav-links" id="primary-navigation">
-          ${links.map(([id, url, label]) => `<a href="${url}" class="${page === id ? 'active' : ''}"${page === id ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
-          <a class="btn" href="/contacto/">Cotizar ${svg('arrow')}</a>
-        </div>
-      </nav>
-    </div>
+    </nav>
   </header>`;
 
 document.querySelector('#site-footer').innerHTML = `
   <footer class="footer">
-    <div class="footer-stripe"></div>
-    ${page === 'contacto' || document.querySelector('.cta-block') ? '' : `
-    <div class="footer-cta">
-      <div class="container">
-        <h2>¿Listo para una solución <span class="hl">que dure?</span></h2>
-        <a class="btn" href="/contacto/">Solicitar cotización ${svg('arrow')}</a>
-      </div>
-    </div>`}
     <div class="container footer-grid">
       <div class="footer-brand">
-        <img src="/logo-transparent.webp" alt="CEAH">
+        <img src="/logo-light.webp" alt="CEAH">
         <p>Compuestos Estructurales Autopinturas de Hidalgo. Soluciones en materiales compuestos y sistemas especializados para la industria y la construcción.</p>
       </div>
       <div>
@@ -95,7 +93,8 @@ document.querySelector('#site-footer').innerHTML = `
       <span>© ${new Date().getFullYear()} CEAH · Todos los derechos reservados</span>
       <a href="https://partumdesign.com.mx" target="_blank" rel="noopener">Desarrollado por Partum Design</a>
     </div>
-  </footer>`;
+  </footer>
+  <a class="to-top" href="#" aria-label="Volver arriba">${svg('arrow-up')}</a>`;
 
 document.querySelectorAll('[data-icon]').forEach((el) => { el.outerHTML = svg(el.dataset.icon); });
 
@@ -130,7 +129,11 @@ window.addEventListener('load', () => window.setTimeout(hidePreloader, 250));
 window.setTimeout(hidePreloader, 2500);
 
 const header = document.querySelector('.site-header');
-const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 30);
+const toTop = document.querySelector('.to-top');
+const onScroll = () => {
+  header?.classList.toggle('scrolled', window.scrollY > 30);
+  toTop?.classList.toggle('show', window.scrollY > 700);
+};
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 

@@ -3,63 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#051326">
+  <meta name="theme-color" content="#1f232b">
   <meta name="description" content="Contacta a CEAH para recibir asesoría sobre soluciones FRP, pasos de gato, perfiles estructurales y láminas de PVC.">
   <meta property="og:title" content="Contacto | CEAH">
   <meta property="og:description" content="Contacta a CEAH para recibir asesoría sobre soluciones FRP, pasos de gato, perfiles estructurales y láminas de PVC.">
   <meta property="og:image" content="/hero-frp.jpg">
   <link rel="icon" href="/logo-icon.jpg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap">
   <title>Contacto | CEAH</title>
 </head>
 <body data-page="contacto">
-  <div class="preloader" aria-hidden="true"><div><img src="/logo-transparent.webp" alt=""><div class="loader-line"><span></span></div></div></div>
+  <div class="preloader" aria-hidden="true"><div><img src="/logo-light.webp" alt=""><div class="loader-line"><span></span></div></div></div>
   <div id="site-header"></div>
   <main>
-    <section class="page-hero" style="--hero-img: url('/hero-frp.jpg')">
-      <div class="container">
-        <nav class="crumbs reveal" aria-label="Ruta"><a href="/">Inicio</a><span>/</span><span>Contacto</span></nav>
-        <p class="eyebrow light reveal">Contacto</p>
-        <h1 class="reveal">Hablemos de lo que <span class="hl">tu proyecto necesita.</span></h1>
-        <p class="page-intro reveal">Recibe asesoría técnica, atención personalizada y acompañamiento para seleccionar la solución adecuada.</p>
+    <section class="split-hero inner">
+      <div class="hero-media">
+        <img src="/hero-frp.jpg" alt="Instalación industrial con rejilla de fibra de vidrio" fetchpriority="high">
+        <div class="hero-accent" aria-hidden="true">Hablemos</div>
+        <div class="hero-copy reveal">
+          <nav class="crumbs" aria-label="Ruta"><a href="/">Inicio</a><span>/</span><span>Contacto</span></nav>
+          <p class="kicker">Contacto</p>
+          <h1>Hablemos de lo que <span class="hl">tu proyecto necesita.</span></h1>
+          <p>Recibe asesoría técnica, atención personalizada y acompañamiento para seleccionar la solución adecuada.</p>
+          
+        </div>
       </div>
-      <div class="hero-stripe"></div>
+      <div class="hero-word" aria-hidden="true" style="--word-img: url('/productos-frp.jpg')"><div class="mega"><span>Con</span><span>tac</span><span>to</span></div></div>
+      <div class="hero-nav"><a href="#contenido" aria-label="Ver contenido"><i data-icon="arrow-down"></i></a><a href="/contacto/" aria-label="Solicitar cotización"><i data-icon="arrow"></i></a></div>
     </section>
 
-    <section class="section">
+    <section id="contenido" class="sec dark dots">
       <div class="container contact-grid">
-        <div>
-          <div class="reveal">
-            <p class="eyebrow">Canales de atención</p>
-            <h2 class="h-md" style="margin-bottom: 34px">Estamos listos para <span class="hl">ayudarte.</span></h2>
-          </div>
-          <div class="contact-cards" data-stagger>
-            <div class="contact-card reveal"><span class="icon"><i data-icon="mail"></i></span><div><h3>Correo</h3><a href="mailto:ventas@ceahestrcutrales.com">ventas@ceahestrcutrales.com</a><a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a></div></div>
-            <div class="contact-card reveal"><span class="icon"><i data-icon="pin"></i></span><div><h3>Ubicaciones</h3><p>Tula de Allende, Hidalgo (matriz)</p><p>La Venta del Astillero, Jalisco</p></div></div>
-            <div class="contact-card reveal"><span class="icon"><i data-icon="phone"></i></span><div><h3>Teléfono</h3><p>Próximamente. Escríbenos por correo y te responderemos con la información de tu proyecto.</p></div></div>
+        <div class="reveal">
+          <h2 class="stack"><span class="sm">Estamos listos</span><span class="lg">Para ayudarte</span></h2>
+          <p class="lead">Escríbenos y te respondemos con la información que tu proyecto necesita.</p>
+          <div class="contact-cards">
+            <div class="contact-card"><span class="icon-sq"><i data-icon="mail"></i></span><div><h3>Correo</h3><a href="mailto:ventas@ceahestrcutrales.com">ventas@ceahestrcutrales.com</a><a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a></div></div>
+            <div class="contact-card"><span class="icon-sq"><i data-icon="pin"></i></span><div><h3>Ubicaciones</h3><p>Tula de Allende, Hidalgo (matriz)</p><p>La Venta del Astillero, Jalisco</p></div></div>
+            <div class="contact-card"><span class="icon-sq"><i data-icon="phone"></i></span><div><h3>Teléfono</h3><p>Próximamente. Escríbenos por correo y te responderemos con la información de tu proyecto.</p></div></div>
           </div>
         </div>
-        <form class="contact-form cut reveal" id="contact-form">
-          <div class="form-title"><p class="eyebrow light">Solicitar información</p><h2>Cuéntanos sobre <span class="hl">tu proyecto.</span></h2></div>
+        <form class="contact-form reveal" id="contact-form">
+          <div class="form-title"><p class="kicker">Solicitar información</p><h2 class="stack"><span class="sm">Cuéntanos sobre</span><span class="lg">Tu proyecto</span></h2></div>
           <label>Nombre<input name="nombre" required autocomplete="name" placeholder="Tu nombre"></label>
           <label>Empresa<input name="empresa" autocomplete="organization" placeholder="Nombre de tu empresa"></label>
           <label>Correo electrónico<input type="email" name="correo" required autocomplete="email" placeholder="correo@empresa.com"></label>
           <label>Solución de interés<select name="solucion"><option>Rejillas moldeadas</option><option>Rejillas pultruidas</option><option>Perfiles estructurales</option><option>Pasos de gato</option><option>Láminas de PVC</option><option>Asesoría técnica</option></select></label>
           <label class="full">Mensaje<textarea name="mensaje" rows="5" required placeholder="Describe brevemente el ambiente, uso o necesidad de tu proyecto"></textarea></label>
-          <button class="btn full" type="submit">Enviar solicitud <i data-icon="arrow"></i></button>
+          <button class="btn dark full" type="submit">Enviar solicitud <i data-icon="arrow"></i></button>
           <p class="form-note full">Al enviar, se abrirá tu aplicación de correo con la solicitud preparada.</p>
         </form>
       </div>
     </section>
 
-    <section class="section on-yellow">
+    <section class="sec darker">
       <div class="container">
-        <div class="section-heading">
-          <div class="reveal"><p class="eyebrow">Qué sucede después</p><h2 class="h-lg">Una conversación clara para avanzar.</h2></div>
+        <div class="sec-head">
+          <h2 class="stack reveal"><span class="sm">Qué sucede</span><span class="lg">Después</span></h2>
+          <p class="lead reveal">Una conversación clara para avanzar con tu proyecto.</p>
         </div>
-        <div class="process" data-stagger>
+        <div class="steps" data-stagger>
           <div class="step reveal"><h3>Compartes la necesidad</h3><p>Nos cuentas el ambiente, el uso y los plazos de tu proyecto.</p></div>
           <div class="step reveal"><h3>Revisamos la solución</h3><p>Evaluamos alternativas y te proponemos la adecuada.</p></div>
           <div class="step reveal"><h3>Coordinamos el siguiente paso</h3><p>Cotización, suministro y logística de entrega.</p></div>
