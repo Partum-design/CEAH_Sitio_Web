@@ -51,7 +51,7 @@ document.querySelector('#site-header').innerHTML = `
     <div class="nav-wrap">
       <nav class="nav container" aria-label="Navegación principal">
         <a class="brand" href="/" aria-label="CEAH, inicio">
-          <img src="/logo-transparent.png" alt="CEAH">
+          <img src="/logo-transparent.webp" alt="CEAH">
         </a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Abrir menú">
           <span></span><span></span>
@@ -76,7 +76,7 @@ document.querySelector('#site-footer').innerHTML = `
     </div>`}
     <div class="container footer-grid">
       <div class="footer-brand">
-        <img src="/logo-transparent.png" alt="CEAH">
+        <img src="/logo-transparent.webp" alt="CEAH">
         <p>Compuestos Estructurales Autopinturas de Hidalgo. Soluciones en materiales compuestos y sistemas especializados para la industria y la construcción.</p>
       </div>
       <div>
