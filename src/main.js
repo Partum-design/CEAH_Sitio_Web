@@ -62,7 +62,7 @@ document.querySelector('#site-header').innerHTML = `
           ${links.map(([id, url, label]) => `<a href="${url}" class="${page === id ? 'active' : ''}"${page === id ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
         </div>
         <div class="menu-side">
-          <div><h4>Escríbenos</h4><a href="mailto:ventas@ceahestrcutrales.com">ventas@ceahestrcutrales.com</a><a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a></div>
+          <div><h4>Escríbenos</h4><a href="mailto:ventas@ceahesteuctural.com.mx">ventas@ceahesteuctural.com.mx</a><a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a></div>
           <div><h4>Ubicaciones</h4><p>Tula de Allende, Hidalgo</p><p>La Venta del Astillero, Jalisco</p></div>
           <a class="btn dark" href="/contacto/">Solicitar cotización ${svg('arrow')}</a>
         </div>
@@ -83,7 +83,7 @@ document.querySelector('#site-footer').innerHTML = `
       </div>
       <div>
         <h4>Contacto</h4>
-        <a href="mailto:ventas@ceahestrcutrales.com">ventas@ceahestrcutrales.com</a>
+        <a href="mailto:ventas@ceahesteuctural.com.mx">ventas@ceahesteuctural.com.mx</a>
         <a href="mailto:ingeneiria1@ceahestructurales.com">ingeneiria1@ceahestructurales.com</a>
         <p>Tula de Allende, Hidalgo (matriz)</p>
         <p>La Venta del Astillero, Jalisco</p>
@@ -138,17 +138,26 @@ window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 const form = document.querySelector('#contact-form');
-form?.addEventListener('submit', (event) => {
+form?.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const data = new FormData(form);
-  const subject = encodeURIComponent(`Solicitud web CEAH · ${data.get('empresa') || data.get('nombre')}`);
-  const body = encodeURIComponent([
-    `Nombre: ${data.get('nombre')}`,
-    `Empresa: ${data.get('empresa') || 'No indicada'}`,
-    `Correo: ${data.get('correo')}`,
-    `Solución: ${data.get('solucion')}`,
-    '',
-    `Mensaje: ${data.get('mensaje')}`,
-  ].join('\n'));
-  window.location.href = `mailto:ventas@ceahestrcutrales.com?subject=${subject}&body=${body}`;
+  const note = form.querySelector('.form-note');
+  const button = form.querySelector('button[type="submit"]');
+  const data = Object.fromEntries(new FormData(form));
+  button.disabled = true;
+  note.textContent = 'Enviando solicitud…';
+  try {
+    const response = await fetch('/api/contacto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok) throw new Error(result.error);
+    form.reset();
+    note.textContent = '¡Gracias! Recibimos tu solicitud y te responderemos pronto.';
+  } catch (error) {
+    note.textContent = error.message || 'No pudimos enviar tu solicitud. Escríbenos a ventas@ceahesteuctural.com.mx.';
+  } finally {
+    button.disabled = false;
+  }
 });
