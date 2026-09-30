@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c2d5e">
+  <meta name="description" content="Catálogo CEAH: rejillas moldeadas y pultruidas FRP, paso de gato FRP, lámina tricapa PVC y perfiles estructurales. Busca por clave comercial.">
+  <meta property="og:title" content="Productos | CEAH">
+  <meta property="og:description" content="Catálogo CEAH: rejillas FRP, paso de gato, lámina tricapa PVC y perfiles estructurales. Busca por clave comercial.">
+  <meta property="og:image" content="/hero-frp.jpg">
+  <link rel="icon" href="/logo-icon.jpg">
+  <title>Productos | CEAH</title>
+</head>
+<body data-page="productos">
+  <div class="preloader" aria-hidden="true"><div><img src="/logo-light.webp" alt=""><div class="loader-line"><span></span></div></div></div>
+  <div id="site-header"></div>
+  <main>
+    <section class="split-hero inner">
+      <div class="hero-media">
+        <img src="/rejilla-textura.jpg" alt="Rejilla moldeada de fibra de vidrio color amarillo" fetchpriority="high">
+        <div class="hero-accent" aria-hidden="true">Catálogo<br>2026</div>
+        <div class="hero-copy reveal">
+          <nav class="crumbs" aria-label="Ruta"><a href="/">Inicio</a><span>/</span><span>Productos</span></nav>
+          <p class="kicker">Productos</p>
+          <h1>Encuentra tu producto <span class="hl">por clave.</span></h1>
+          <p>Rejillas FRP, paso de gato, lámina tricapa de PVC y perfiles estructurales con sus fichas técnicas.</p>
+        </div>
+      </div>
+      <div class="hero-word" aria-hidden="true" style="--word-img: url('/rejilla-textura.jpg')"><div class="mega"><span>Pro</span><span>duc</span><span>tos</span></div></div>
+      <div class="hero-nav"><a href="#contenido" aria-label="Ver contenido"><i data-icon="arrow-down"></i></a><a href="/contacto/" aria-label="Solicitar cotización"><i data-icon="arrow"></i></a></div>
+    </section>
+
+    <section id="contenido" class="sec light finder">
+      <div class="container">
+        <div class="sec-head">
+          <h2 class="stack reveal"><span class="sm">Buscador de</span><span class="lg">Claves</span></h2>
+          <p class="lead reveal">Escribe la clave comercial, el tipo de producto o una medida. Selecciona un resultado para ver su ficha.</p>
+        </div>
+        <div class="finder-box reveal">
+          <label class="search-field" for="catalog-search"><i data-icon="search"></i><input id="catalog-search" type="search" autocomplete="off" placeholder="Ej. MG-15, pultruida 2&quot;, lámina 3.0 mm, paso de gato"></label>
+          <div class="chips" aria-label="Filtros rápidos">
+            <button type="button" data-q="">Todos</button>
+            <button type="button" data-q="MG">MG · Moldeada</button>
+            <button type="button" data-q="PG">PG · Pultruida</button>
+            <button type="button" data-q="CW">CW · Paso de gato</button>
+            <button type="button" data-q="LTP">LTP · Lámina PVC</button>
+          </div>
+          <div class="result-grid" id="catalog-results" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="catalogo"></div>
+
+    <section class="cta-band">
+      <span class="ghost" aria-hidden="true">Cotiza</span>
+      <div class="container reveal">
+        <h2 class="stack center"><span class="sm">¿No encuentras</span><span class="lg">Tu medida?</span></h2>
+        <p>Ofrecemos corte a la medida y te ayudamos a seleccionar peralte, acabado y sistema de fijación.</p>
+        <a class="btn dark" href="/contacto/">Solicitar cotización <i data-icon="arrow"></i></a>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

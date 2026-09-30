@@ -7,6 +7,8 @@ export default defineConfig({
       input: {
         inicio: resolve(import.meta.dirname, 'index.html'),
         nosotros: resolve(import.meta.dirname, 'quienes-somos/index.html'),
+        productos: resolve(import.meta.dirname, 'productos/index.html'),
+        industrias: resolve(import.meta.dirname, 'industrias/index.html'),
         soluciones: resolve(import.meta.dirname, 'soluciones/index.html'),
         ventajas: resolve(import.meta.dirname, 'ventajas/index.html'),
         contacto: resolve(import.meta.dirname, 'contacto/index.html'),

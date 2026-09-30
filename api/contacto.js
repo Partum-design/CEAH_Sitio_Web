@@ -1,6 +1,11 @@
 const nodemailer = require('nodemailer');
 
-const DESTINO = process.env.CONTACT_TO || 'ventas@ceahesteuctural.com.mx';
+// Cada solicitud llega siempre a Ventas y Dirección; CONTACT_TO (separado por comas) agrega más destinatarios.
+const DESTINOS = [...new Set([
+  'ventas@ceahesteuctural.com.mx',
+  'direccion@ceahestructurales.com',
+  ...(process.env.CONTACT_TO || '').split(','),
+].map((d) => d.trim().toLowerCase()).filter(Boolean))];
 
 const escapeHtml = (value = '') => String(value)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -32,13 +37,13 @@ module.exports = async (req, res) => {
   });
 
   const filas = [
-    ['Nombre', nombre], ['Empresa', empresa || 'No indicada'], ['Correo', correo], ['Solución', solucion],
+    ['Nombre', nombre], ['Empresa', empresa || 'No indicada'], ['Correo', correo], ['Producto', solucion],
   ];
 
   try {
     await transporter.sendMail({
       from: `"Sitio web CEAH" <${process.env.SMTP_USER}>`,
-      to: DESTINO,
+      to: DESTINOS,
       replyTo: `"${nombre.replace(/"/g, '')}" <${correo}>`,
       subject: `Solicitud web CEAH · ${empresa || nombre}`,
       text: `${filas.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nMensaje:\n${mensaje}`,
