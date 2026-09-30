@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    { "source": "/soluciones", "destination": "/productos/", "permanent": true },
+    { "source": "/soluciones/", "destination": "/productos/", "permanent": true },
+    { "source": "/ventajas", "destination": "/quienes-somos/#ventajas", "permanent": true },
+    { "source": "/ventajas/", "destination": "/quienes-somos/#ventajas", "permanent": true },
+    { "source": "/industrias", "destination": "/#industrias", "permanent": true },
+    { "source": "/industrias/", "destination": "/#industrias", "permanent": true }
+  ]
+}

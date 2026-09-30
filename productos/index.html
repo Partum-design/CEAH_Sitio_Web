@@ -37,7 +37,10 @@
           <p class="lead reveal">Escribe la clave comercial, el tipo de producto o una medida. Selecciona un resultado para ver su ficha.</p>
         </div>
         <div class="finder-box reveal">
-          <label class="search-field" for="catalog-search"><i data-icon="search"></i><input id="catalog-search" type="search" autocomplete="off" placeholder="Ej. MG-15, pultruida 2&quot;, lámina 3.0 mm, paso de gato"></label>
+          <div class="finder-top">
+            <label class="jump-field"><span>Por clasificación</span><select id="catalog-jump" aria-label="Ir a un producto"></select></label>
+            <label class="search-field" for="catalog-search"><i data-icon="search"></i><input id="catalog-search" type="search" autocomplete="off" placeholder="Ej. MG-15, pultruida 2&quot;, lámina 3.0 mm, paso de gato"></label>
+          </div>
           <div class="chips" aria-label="Filtros rápidos">
             <button type="button" data-q="">Todos</button>
             <button type="button" data-q="MG">MG · Moldeada</button>

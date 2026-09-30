@@ -15,11 +15,9 @@ document.documentElement.classList.add('js');
 const page = document.body.dataset.page || 'inicio';
 const links = [
   ['inicio', '/', 'Inicio'],
-  ['nosotros', '/quienes-somos/', 'Quiénes somos'],
+  ['nosotros', '/quienes-somos/', 'Nosotros'],
+  ['industrias', '/#industrias', 'Industrias'],
   ['productos', '/productos/', 'Productos'],
-  ['industrias', '/industrias/', 'Industrias'],
-  ['soluciones', '/soluciones/', 'Soluciones'],
-  ['ventajas', '/ventajas/', 'Ventajas'],
   ['contacto', '/contacto/', 'Contacto'],
 ];
 
@@ -29,6 +27,10 @@ const WHATSAPP = '525633934633';
 const WHATSAPP_LABEL = '56 3393 4633';
 const mailHref = `mailto:${MAIL_VENTAS}?cc=${MAIL_DIRECCION}&subject=${encodeURIComponent('Solicitud de información CEAH')}`;
 const waHref = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hola CEAH, me interesa recibir información sobre sus productos.')}`;
+// Mensajes predeterminados para pedir informes de un producto
+const productLabel = (p) => (p.code ? `${p.code} · ${p.name}` : p.name);
+const waFor = (p) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola CEAH, me interesa el producto *${productLabel(p)}*.\n\n¿Me pueden compartir precio, disponibilidad y tiempo de entrega?\n\nCantidad aproximada: \nCiudad de entrega: \n\nGracias.`)}`;
+const mailFor = (p) => `mailto:${MAIL_VENTAS}?cc=${MAIL_DIRECCION}&subject=${encodeURIComponent(`Solicitud de informes · ${productLabel(p)}`)}&body=${encodeURIComponent(`Hola equipo CEAH,\n\nMe interesa recibir información y cotización de:\n\n• Producto: ${productLabel(p)}\n• Cantidad aproximada: \n• Medidas o especificación requerida: \n• Ciudad de entrega: \n\nNombre: \nEmpresa: \nTeléfono: \n\nQuedo atento. Gracias.`)}`;
 const sedes = '<p><b>Oficinas</b> · Tula de Allende, Hidalgo</p><p><b>Planta</b> · La Venta del Astillero, Jalisco</p>';
 
 const icons = {
@@ -75,6 +77,23 @@ document.querySelector('#site-header').innerHTML = `
       <a class="brand" href="/" aria-label="CEAH, inicio">
         <img src="/logo-light.webp" alt="CEAH">
       </a>
+      <div class="desk-nav">
+        ${links.map(([id, url, label]) => id !== 'productos'
+          ? `<a href="${url}" class="${page === id ? 'active' : ''}"${page === id ? ' aria-current="page"' : ''}>${label}</a>`
+          : `<div class="dd">
+              <a href="${url}" class="dd-trigger ${page === id ? 'active' : ''}" aria-haspopup="true"${page === id ? ' aria-current="page"' : ''}>${label} <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></a>
+              <div class="dd-panel">
+                <div class="dd-grid">
+                  ${families.map((f) => {
+                    const items = products.filter((p) => p.family === f.id);
+                    return `<div class="dd-col"><a class="dd-family" href="/productos/#${f.id}"><small>${f.tag}</small>${f.name}</a>
+                      <ul>${items.length ? items.map((p) => `<li><a href="/productos/#${p.code}"><b>${p.code}</b>${p.name.replace(/^.*–\s*/, '')}</a></li>`).join('') : '<li><a href="/productos/#perfiles"><b>PDF</b>Ver catálogo completo</a></li>'}</ul></div>`;
+                  }).join('')}
+                </div>
+                <div class="dd-foot"><a class="btn" href="/productos/">Ver todo el catálogo ${svg('arrow')}</a><a class="btn wa-btn" href="${waHref}" target="_blank" rel="noopener">${whatsappSvg} Pedir informes</a></div>
+              </div>
+            </div>`).join('')}
+      </div>
       <button class="search-toggle" type="button" aria-label="Buscar productos por clave" aria-controls="search-panel" aria-expanded="false">${svg('search')}<span>Buscar</span></button>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="Abrir menú">
         Menú <span class="bars"><span></span><span></span></span>
@@ -154,12 +173,12 @@ if (catalog) {
           <h2>${f.name}</h2>
           <p class="lead">${f.summary}</p>
           <dl class="spec-dl">${f.specs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div><dt>Aplicaciones</dt><dd>${f.apps}</dd></div></dl>
-          <div class="actions">${f.pdf ? `<a class="btn" href="${f.pdf}" target="_blank" rel="noopener">Ficha técnica ${svg('download')}</a>` : ''}<a class="btn line" href="/contacto/?producto=${encodeURIComponent(f.name)}">Cotizar ${svg('arrow')}</a></div>
+          <div class="info-box"><p>¿Te interesa? Pide informes con el mensaje listo:</p><div class="actions"><a class="btn wa-btn" href="${waFor(f)}" target="_blank" rel="noopener">${whatsappSvg} WhatsApp</a><a class="btn mail-btn" href="${mailFor(f)}">${svg('mail')} Correo</a>${f.pdf ? `<a class="btn line" href="${f.pdf}" target="_blank" rel="noopener">Ficha técnica ${svg('download')}</a>` : ''}</div></div>
         </div>
       </div>
       ${rows.length ? `<div class="container"><div class="table-wrap reveal"><table class="code-table">
-        <thead><tr><th>Clave</th><th>Producto</th>${f.columns.map((c) => `<th>${c}</th>`).join('')}<th><span class="sr-only">Cotizar</span></th></tr></thead>
-        <tbody>${rows.map((p) => `<tr id="${p.code}"><th scope="row">${p.code}</th><td>${p.name}</td>${p.data.map((d) => `<td>${d}</td>`).join('')}<td><a class="row-cta" href="/contacto/?producto=${encodeURIComponent(`${p.code} · ${p.name}`)}">Cotizar ${svg('arrow')}</a></td></tr>`).join('')}</tbody>
+        <thead><tr><th>Clave</th><th>Producto</th>${f.columns.map((c) => `<th>${c}</th>`).join('')}<th>Pedir informes</th></tr></thead>
+        <tbody>${rows.map((p) => `<tr id="${p.code}"><th scope="row">${p.code}</th><td>${p.name}</td>${p.data.map((d) => `<td>${d}</td>`).join('')}<td class="row-actions"><a class="mini wa" href="${waFor(p)}" target="_blank" rel="noopener" aria-label="Pedir informes de ${p.code} por WhatsApp">${whatsappSvg}<span>WhatsApp</span></a><a class="mini mail" href="${mailFor(p)}" aria-label="Pedir informes de ${p.code} por correo">${svg('mail')}<span>Correo</span></a></td></tr>`).join('')}</tbody>
       </table></div></div>` : ''}
     </section>`;
   }).join('');
@@ -171,9 +190,15 @@ if (catalog) {
   const render = (query) => {
     const found = searchProducts(query);
     body.innerHTML = found.length
-      ? found.map((p) => `<a class="result-card" href="#${p.code}" data-code="${p.code}"><b>${p.code}</b><span>${p.name}</span><small>${familyById[p.family].tag}</small></a>`).join('')
+      ? found.map((p) => `<div class="result-card"><a href="#${p.code}"><b>${p.code}</b><span>${p.name}</span><small>${familyById[p.family].tag} · Ver ficha</small></a><div class="result-actions"><a class="mini wa" href="${waFor(p)}" target="_blank" rel="noopener" aria-label="WhatsApp ${p.code}">${whatsappSvg}</a><a class="mini mail" href="${mailFor(p)}" aria-label="Correo ${p.code}">${svg('mail')}</a></div></div>`).join('')
       : `<p class="empty">No encontramos “${escapeHtml(query)}”. Prueba con MG, PG, CW o LTP, o <a href="/contacto/">pregúntanos</a>.</p>`;
   };
+  const jump = document.querySelector('#catalog-jump');
+  jump.innerHTML = '<option value="">Selecciona un producto…</option>' + families.map((f) => {
+    const items = products.filter((p) => p.family === f.id);
+    return `<optgroup label="${f.name}"><option value="${f.id}">${f.name} · ver familia</option>${items.map((p) => `<option value="${p.code}">${p.code} · ${p.name}</option>`).join('')}</optgroup>`;
+  }).join('');
+  jump.addEventListener('change', () => { if (jump.value) window.location.hash = jump.value; });
   const params = new URLSearchParams(window.location.search);
   input.value = params.get('q') || '';
   render(input.value);
