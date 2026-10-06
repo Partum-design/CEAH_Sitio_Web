@@ -572,7 +572,7 @@ body.menu-open .float-actions, body.search-open .float-actions { display: none; 
   .dd { position: static; display: flex; }
   .dd-panel { position: absolute; left: 0; right: 0; top: 100%; padding: 34px max(24px, calc((100vw - 1200px) / 2)) 28px; background: var(--white); border-bottom: 6px solid var(--yellow); box-shadow: 0 30px 60px -20px rgba(7,31,69,.5); opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity .25s ease, transform .25s var(--ease), visibility .25s; }
   .dd:hover .dd-panel, .dd:focus-within .dd-panel { opacity: 1; visibility: visible; transform: none; }
-  .dd-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px; }
+  .dd-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
   .dd-family { display: block; padding-bottom: 12px; margin-bottom: 10px; border-bottom: 2px solid var(--blue); color: var(--dark); font-family: var(--anton); font-size: 20px; line-height: 1.05; text-transform: uppercase; }
   .dd-family small { display: block; margin-bottom: 4px; color: var(--blue); font-family: var(--oswald); font-size: 11px; font-weight: 500; letter-spacing: .2em; }
   .dd-family:hover { color: var(--blue); }
@@ -588,7 +588,7 @@ body.menu-open .float-actions, body.search-open .float-actions { display: none; 
   .desk-nav > a, .dd-trigger { padding: 0 10px; font-size: 13px; letter-spacing: .12em; }
   .search-toggle span { display: none; }
   .search-toggle { width: 48px; padding: 0; justify-content: center; }
-  .dd-grid { grid-template-columns: repeat(3, 1fr); }
+  .dd-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* ---------- Botones de informes (WhatsApp / correo) ---------- */
@@ -628,3 +628,52 @@ body.menu-open .float-actions, body.search-open .float-actions { display: none; 
 .result-card:hover { background: var(--dark-3); color: var(--white); }
 .result-card:hover b { color: var(--yellow); }
 .result-card:hover small { color: var(--muted); }
+
+/* ---------- Industrias con fotografía ---------- */
+.industry-card { padding: 0; }
+.industry-card .pic { aspect-ratio: 3 / 2; overflow: hidden; background: var(--dark-2); }
+.industry-card .pic img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.industry-card:hover .pic img { transform: scale(1.06); }
+.industry-card .body { position: relative; display: flex; flex: 1; flex-direction: column; padding: 0 24px 28px; }
+.industry-card .icon-sq { margin-top: -28px; position: relative; z-index: 1; }
+.industry-card .n { top: 14px; right: 20px; }
+
+/* ---------- Medidas en lista (una por línea) ---------- */
+.measure-list { margin: 0; padding: 0; list-style: none; }
+.measure-list li { position: relative; padding-left: 16px; line-height: 1.6; }
+.measure-list li + li { margin-top: 4px; }
+.measure-list li::before { content: ''; position: absolute; left: 0; top: .7em; width: 6px; height: 6px; background: var(--yellow); }
+.family.alt .measure-list li::before { background: var(--blue); }
+.measure-list.cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 4px 12px; }
+.measure-list.cols li + li { margin-top: 0; }
+
+/* ---------- Dibujo técnico ---------- */
+.drawing { margin: 28px 0 0; padding: 18px; background: var(--white); border-left: 6px solid var(--yellow); }
+.drawing a { display: block; cursor: zoom-in; }
+.family-media .drawing img { width: 100%; height: auto; aspect-ratio: auto; object-fit: contain; border: 0; }
+.drawing figcaption { margin-top: 10px; color: #3d5278; font-family: var(--oswald); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
+.family.alt .drawing { background: var(--paper); }
+
+/* ---------- Páginas de línea de producto ---------- */
+.split-hero.line-hero { min-height: max(480px, 62svh); }
+.line-hero .hero-media { padding-top: 130px; }
+.line-hero .mega { font-size: clamp(80px, 9.5vw, 170px); }
+.crumbs { flex-wrap: wrap; }
+.lines-sec .area-grid { margin-top: 0; }
+#catalogo, #contact-form { scroll-margin-top: 100px; }
+
+/* ---------- Menú flotante de WhatsApp ---------- */
+.float-actions { align-items: flex-end; }
+.float-btn { border: 0; cursor: pointer; }
+.float-btn.wa[aria-expanded="true"] { background: #1ebe5a; }
+.wa-menu { width: min(300px, calc(100vw - 32px)); padding: 16px; background: var(--white); border-top: 5px solid #25d366; box-shadow: 0 24px 48px rgba(7,31,69,.4); }
+.wa-menu[hidden] { display: none; }
+.wa-menu p { margin-bottom: 10px; color: var(--dark); font-family: var(--oswald); font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+.wa-menu a { display: flex; align-items: center; gap: 14px; padding: 12px; color: #3d5278; font-size: 14px; line-height: 1.35; transition: background .2s ease; }
+.wa-menu a + a { border-top: 1px solid rgba(12,45,94,.1); }
+.wa-menu a:hover, .wa-menu a:focus-visible { background: #e9f9ef; }
+.wa-menu .wa-ico { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; background: #25d366; color: var(--white); }
+.wa-menu .wa-ico svg { width: 22px; height: 22px; }
+.wa-menu small { display: block; color: #1ebe5a; font-family: var(--oswald); font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.wa-menu b { display: block; color: var(--dark); font-weight: 500; }
+@media (min-width: 921px) { .line-hero .hero-word { padding-top: 130px; } }

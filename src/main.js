@@ -8,7 +8,7 @@ import '@fontsource/poppins/latin-400.css';
 import '@fontsource/poppins/latin-400-italic.css';
 import '@fontsource/poppins/latin-500.css';
 import './style.css';
-import { families, familyById, industries, products, searchProducts } from './products.js';
+import { familyById, industries, lineByFamily, lines, productUrl, products, searchProducts } from './products.js';
 
 document.documentElement.classList.add('js');
 
@@ -31,6 +31,12 @@ const waHref = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hola CEAH, 
 const productLabel = (p) => (p.code ? `${p.code} · ${p.name}` : p.name);
 const waFor = (p) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola CEAH, me interesa el producto *${productLabel(p)}*.\n\n¿Me pueden compartir precio, disponibilidad y tiempo de entrega?\n\nCantidad aproximada: \nCiudad de entrega: \n\nGracias.`)}`;
 const mailFor = (p) => `mailto:${MAIL_VENTAS}?cc=${MAIL_DIRECCION}&subject=${encodeURIComponent(`Solicitud de informes · ${productLabel(p)}`)}&body=${encodeURIComponent(`Hola equipo CEAH,\n\nMe interesa recibir información y cotización de:\n\n• Producto: ${productLabel(p)}\n• Cantidad aproximada: \n• Medidas o especificación requerida: \n• Ciudad de entrega: \n\nNombre: \nEmpresa: \nTeléfono: \n\nQuedo atento. Gracias.`)}`;
+// Botón flotante de WhatsApp: el visitante elige con quién hablar
+const waContacts = [
+  { area: 'Ventas', name: 'Mauricio Colin', phone: '525539194580', label: '55 3919 4580' },
+  { area: 'Ingeniería', name: 'Ricardo López', phone: '525578528045', label: '55 7852 8045' },
+];
+const waContactHref = (c) => `https://wa.me/${c.phone}?text=${encodeURIComponent(`Hola ${c.name}, me comunico desde el sitio web de CEAH. Me interesa recibir información.`)}`;
 const sedes = '<p><b>Oficinas</b> · Tula de Allende, Hidalgo</p><p><b>Planta</b> · La Venta del Astillero, Jalisco</p>';
 
 const icons = {
@@ -84,10 +90,10 @@ document.querySelector('#site-header').innerHTML = `
               <a href="${url}" class="dd-trigger ${page === id ? 'active' : ''}" aria-haspopup="true"${page === id ? ' aria-current="page"' : ''}>${label} <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></a>
               <div class="dd-panel">
                 <div class="dd-grid">
-                  ${families.map((f) => {
-                    const items = products.filter((p) => p.family === f.id);
-                    return `<div class="dd-col"><a class="dd-family" href="/productos/#${f.id}"><small>${f.tag}</small>${f.name}</a>
-                      <ul>${items.length ? items.map((p) => `<li><a href="/productos/#${p.code}"><b>${p.code}</b>${p.name.replace(/^.*–\s*/, '')}</a></li>`).join('') : '<li><a href="/productos/#perfiles"><b>PDF</b>Ver catálogo completo</a></li>'}</ul></div>`;
+                  ${lines.map((l) => {
+                    const items = products.filter((p) => l.families.includes(p.family));
+                    return `<div class="dd-col"><a class="dd-family" href="${l.url}"><small>${l.tag}</small>${l.name}</a>
+                      <ul>${items.length ? items.map((p) => `<li><a href="${l.url}?clave=${p.code}"><b>${p.code}</b>${p.name.replace(/^.*–\s*/, '')}</a></li>`).join('') : `<li><a href="${l.url}"><b>PDF</b>Ver catálogo completo</a></li>`}</ul></div>`;
                   }).join('')}
                 </div>
                 <div class="dd-foot"><a class="btn" href="/productos/">Ver todo el catálogo ${svg('arrow')}</a><a class="btn wa-btn" href="${waHref}" target="_blank" rel="noopener">${whatsappSvg} Pedir informes</a></div>
@@ -104,7 +110,7 @@ document.querySelector('#site-header').innerHTML = `
         </div>
         <div class="menu-side">
           <div><h4>Escríbenos</h4><a href="mailto:${MAIL_VENTAS}">${MAIL_VENTAS}</a><a href="mailto:${MAIL_DIRECCION}">${MAIL_DIRECCION}</a><a href="${waHref}" target="_blank" rel="noopener">WhatsApp ${WHATSAPP_LABEL}</a></div>
-          <div><h4>Ubicaciones</h4>${sedes}</div>
+          <div><h4>Productos</h4>${lines.map((l) => `<a href="${l.url}">${l.name}</a>`).join('')}</div>
           <a class="btn dark" href="/contacto/">Solicitar cotización ${svg('arrow')}</a>
         </div>
       </div>
@@ -146,7 +152,11 @@ document.querySelector('#site-footer').innerHTML = `
   </footer>
   <div class="float-actions">
     <a class="float-btn mail" href="${mailHref}" aria-label="Enviar correo a CEAH">${svg('mail')}</a>
-    <a class="float-btn wa" href="${waHref}" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp">${whatsappSvg}</a>
+    <div class="wa-menu" id="wa-menu" hidden>
+      <p>¿Con quién quieres hablar?</p>
+      ${waContacts.map((c) => `<a href="${waContactHref(c)}" target="_blank" rel="noopener"><span class="wa-ico">${whatsappSvg}</span><span><small>${c.area}</small><b>${c.name}</b>${c.label}</span></a>`).join('')}
+    </div>
+    <button class="float-btn wa" type="button" aria-label="Escribir por WhatsApp: elegir contacto" aria-controls="wa-menu" aria-expanded="false">${whatsappSvg}</button>
   </div>
   <a class="to-top" href="#" aria-label="Volver arriba">${svg('arrow-up')}</a>`;
 
@@ -156,24 +166,30 @@ const escapeHtml = (value) => String(value).replace(/&/g, '&amp;').replace(/</g,
 document.querySelectorAll('[data-industries]').forEach((grid) => {
   const list = grid.dataset.industries === 'short' ? industries.slice(0, 4) : industries;
   grid.innerHTML = list.map((ind, i) => `
-    <article class="industry-card reveal"><span class="icon-sq"><i data-icon="${ind.icon}"></i></span><span class="n">${String(i + 1).padStart(2, '0')}</span>
-      <h3>${ind.name}</h3><p>${ind.text}</p><small>${ind.items}</small></article>`).join('');
+    <article class="industry-card reveal"><div class="pic"><img src="${ind.image}" alt="Industria ${ind.name.toLowerCase()}" loading="lazy" width="900" height="600"></div><div class="body"><span class="icon-sq"><i data-icon="${ind.icon}"></i></span><span class="n">${String(i + 1).padStart(2, '0')}</span>
+      <h3>${ind.name}</h3><p>${ind.text}</p><small>${ind.items}</small></div></article>`).join('');
 });
 
+// Catálogo: cada página de línea (data-line) muestra solo sus familias
+const specValue = (v, mod) => (Array.isArray(v) ? `<ul class="measure-list${mod ? ` ${mod}` : ''}">${v.map((x) => `<li>${x}</li>`).join('')}</ul>` : v);
 const catalog = document.querySelector('#catalogo');
-if (catalog) {
-  catalog.innerHTML = families.map((f, i) => {
+const line = catalog && lines.find((l) => l.id === catalog.dataset.line);
+if (catalog && line) {
+  catalog.innerHTML = line.families.map((id, i) => {
+    const f = familyById[id];
     const rows = products.filter((p) => p.family === f.id);
     return `
     <section class="family ${i % 2 ? 'alt' : ''}" id="${f.id}">
       <div class="container family-grid">
-        <div class="family-media reveal"><img src="${f.image}" alt="${f.name}" loading="lazy"><span class="family-count">${rows.length ? `${rows.length} clave${rows.length > 1 ? 's' : ''}` : 'Catálogo'}</span></div>
+        <div class="family-media reveal"><img src="${f.image}" alt="${f.name}" loading="${i ? 'lazy' : 'eager'}"><span class="family-count">${rows.length ? `${rows.length} clave${rows.length > 1 ? 's' : ''}` : 'Catálogo'}</span>
+          ${f.drawing ? `<figure class="drawing"><a href="${f.drawing.src}" target="_blank" rel="noopener" aria-label="Ver dibujo técnico en tamaño completo"><img src="${f.drawing.src}" alt="${f.drawing.alt}" loading="lazy"></a><figcaption>${f.drawing.caption}</figcaption></figure>` : ''}
+        </div>
         <div class="family-info reveal">
-          <p class="kicker">${String(i + 1).padStart(2, '0')} · ${f.tag}</p>
+          <p class="kicker">${f.tag}</p>
           <h2>${f.name}</h2>
           <p class="lead">${f.summary}</p>
-          <dl class="spec-dl">${f.specs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}<div><dt>Aplicaciones</dt><dd>${f.apps}</dd></div></dl>
-          <div class="info-box"><p>¿Te interesa? Pide informes con el mensaje listo:</p><div class="actions"><a class="btn wa-btn" href="${waFor(f)}" target="_blank" rel="noopener">${whatsappSvg} WhatsApp</a><a class="btn mail-btn" href="${mailFor(f)}">${svg('mail')} Correo</a>${f.pdf ? `<a class="btn line" href="${f.pdf}" target="_blank" rel="noopener">Ficha técnica ${svg('download')}</a>` : ''}</div></div>
+          <dl class="spec-dl">${f.specs.map(([k, v, mod]) => `<div><dt>${k}</dt><dd>${specValue(v, mod)}</dd></div>`).join('')}<div><dt>Aplicaciones</dt><dd>${f.apps}</dd></div></dl>
+          <div class="info-box"><p>¿Te interesa? Pide informes con el mensaje listo:</p><div class="actions"><a class="btn wa-btn" href="${waFor(f)}" target="_blank" rel="noopener">${whatsappSvg} WhatsApp</a><a class="btn mail-btn" href="${mailFor(f)}">${svg('mail')} Correo</a>${f.pdf ? `<a class="btn line" href="${f.pdf}" target="_blank" rel="noopener" download>${f.pdfLabel || 'Ficha técnica'} ${svg('download')}</a>` : ''}</div></div>
         </div>
       </div>
       ${rows.length ? `<div class="container"><div class="table-wrap reveal"><table class="code-table">
@@ -182,23 +198,42 @@ if (catalog) {
       </table></div></div>` : ''}
     </section>`;
   }).join('');
+}
 
-  // Buscador en línea de la página de productos
-  const input = document.querySelector('#catalog-search');
+// Página general de productos: tarjetas de cada línea
+const lineGrid = document.querySelector('[data-lines]');
+if (lineGrid) {
+  lineGrid.innerHTML = lines.map((l) => {
+    const count = products.filter((p) => l.families.includes(p.family)).length;
+    return `<a class="area-card reveal" href="${l.url}"><div class="pic"><img src="${l.image}" alt="${l.name}" loading="lazy"></div><div class="body"><small>${l.tag}</small><h3>${l.name}</h3><p>${l.text}</p><span class="more">${count ? `${count} clave${count > 1 ? 's' : ''} · ` : ''}Ver línea</span></div></a>`;
+  }).join('');
+}
+
+// Enlaces anteriores (/productos/#CW-10 o #paso-de-gato) llevan a la página de su línea
+if (lineGrid && window.location.hash) {
+  const key = decodeURIComponent(window.location.hash.slice(1));
+  const product = products.find((p) => p.code === key);
+  const target = product ? productUrl(product) : (lines.find((l) => l.id === key) || lineByFamily[key])?.url;
+  if (target) window.location.replace(target);
+}
+
+// Buscador en línea de la página de productos
+const input = document.querySelector('#catalog-search');
+if (input) {
   const body = document.querySelector('#catalog-results');
   const chips = document.querySelectorAll('[data-q]');
   const render = (query) => {
     const found = searchProducts(query);
     body.innerHTML = found.length
-      ? found.map((p) => `<div class="result-card"><a href="#${p.code}"><b>${p.code}</b><span>${p.name}</span><small>${familyById[p.family].tag} · Ver ficha</small></a><div class="result-actions"><a class="mini wa" href="${waFor(p)}" target="_blank" rel="noopener" aria-label="WhatsApp ${p.code}">${whatsappSvg}</a><a class="mini mail" href="${mailFor(p)}" aria-label="Correo ${p.code}">${svg('mail')}</a></div></div>`).join('')
+      ? found.map((p) => `<div class="result-card"><a href="${productUrl(p)}"><b>${p.code}</b><span>${p.name}</span><small>${lineByFamily[p.family].name} · Ver ficha</small></a><div class="result-actions"><a class="mini wa" href="${waFor(p)}" target="_blank" rel="noopener" aria-label="WhatsApp ${p.code}">${whatsappSvg}</a><a class="mini mail" href="${mailFor(p)}" aria-label="Correo ${p.code}">${svg('mail')}</a></div></div>`).join('')
       : `<p class="empty">No encontramos “${escapeHtml(query)}”. Prueba con MG, PG, CW o LTP, o <a href="/contacto/">pregúntanos</a>.</p>`;
   };
   const jump = document.querySelector('#catalog-jump');
-  jump.innerHTML = '<option value="">Selecciona un producto…</option>' + families.map((f) => {
-    const items = products.filter((p) => p.family === f.id);
-    return `<optgroup label="${f.name}"><option value="${f.id}">${f.name} · ver familia</option>${items.map((p) => `<option value="${p.code}">${p.code} · ${p.name}</option>`).join('')}</optgroup>`;
+  jump.innerHTML = '<option value="">Selecciona un producto…</option>' + lines.map((l) => {
+    const items = products.filter((p) => l.families.includes(p.family));
+    return `<optgroup label="${l.name}"><option value="${l.url}">${l.name} · ver línea</option>${items.map((p) => `<option value="${productUrl(p)}">${p.code} · ${p.name}</option>`).join('')}</optgroup>`;
   }).join('');
-  jump.addEventListener('change', () => { if (jump.value) window.location.hash = jump.value; });
+  jump.addEventListener('change', () => { if (jump.value) window.location.href = jump.value; });
   const params = new URLSearchParams(window.location.search);
   input.value = params.get('q') || '';
   render(input.value);
@@ -206,16 +241,19 @@ if (catalog) {
   chips.forEach((chip) => chip.addEventListener('click', () => { input.value = chip.dataset.q; render(input.value); input.focus(); }));
 }
 
-const highlightRow = (code) => {
+// #CLAVE desplaza hasta la fila; ?clave=CLAVE (menú) abre la línea desde el inicio y solo la resalta
+const highlightRow = (code, scroll = true) => {
   const row = code && document.getElementById(code);
   if (!row || row.tagName !== 'TR') return;
   row.classList.remove('hit');
   void row.offsetWidth;
   row.classList.add('hit');
-  row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (scroll) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
 };
 window.addEventListener('hashchange', () => highlightRow(decodeURIComponent(window.location.hash.slice(1))));
 if (window.location.hash) window.setTimeout(() => highlightRow(decodeURIComponent(window.location.hash.slice(1))), 400);
+const presetCode = new URLSearchParams(window.location.search).get('clave');
+if (presetCode) window.setTimeout(() => highlightRow(presetCode, false), 400);
 
 document.querySelectorAll('[data-icon]').forEach((el) => { el.outerHTML = svg(el.dataset.icon); });
 
@@ -228,7 +266,7 @@ const renderSearch = () => {
   const query = searchInput.value;
   const found = searchProducts(query);
   searchResults.innerHTML = found.length
-    ? found.map((p) => `<li><a href="/productos/#${p.code}"><b>${p.code}</b><span>${p.name}</span>${svg('arrow')}</a></li>`).join('')
+    ? found.map((p) => `<li><a href="${productUrl(p)}"><b>${p.code}</b><span>${p.name}</span>${svg('arrow')}</a></li>`).join('')
     : `<li class="empty">Sin resultados para “${escapeHtml(query)}”. <a href="/contacto/">Pregúntanos</a>.</li>`;
 };
 const setSearch = (open) => {
@@ -247,7 +285,7 @@ searchPanel?.querySelector('form').addEventListener('submit', (event) => {
   if (!first) return;
   event.preventDefault();
   setSearch(false);
-  window.location.href = `/productos/#${first.code}`;
+  window.location.href = productUrl(first);
 });
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && !searchPanel.hidden) setSearch(false);
@@ -264,6 +302,17 @@ if (preset && interest) {
   const msg = document.querySelector('#contact-form textarea[name="mensaje"]');
   if (msg && !msg.value) msg.value = `Me interesa cotizar: ${preset}\n`;
 }
+
+const waToggle = document.querySelector('.float-btn.wa');
+const waMenu = document.querySelector('#wa-menu');
+const setWa = (open) => {
+  waMenu.hidden = !open;
+  waToggle.setAttribute('aria-expanded', String(open));
+};
+waToggle?.addEventListener('click', () => setWa(waMenu.hidden));
+document.addEventListener('click', (event) => { if (!waMenu.hidden && !event.target.closest('.float-actions')) setWa(false); });
+document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !waMenu.hidden) setWa(false); });
+waMenu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setWa(false)));
 
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav-links');
