@@ -33,10 +33,10 @@ const waFor = (p) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola 
 const mailFor = (p) => `mailto:${MAIL_VENTAS}?cc=${MAIL_DIRECCION}&subject=${encodeURIComponent(`Solicitud de informes · ${productLabel(p)}`)}&body=${encodeURIComponent(`Hola equipo CEAH,\n\nMe interesa recibir información y cotización de:\n\n• Producto: ${productLabel(p)}\n• Cantidad aproximada: \n• Medidas o especificación requerida: \n• Ciudad de entrega: \n\nNombre: \nEmpresa: \nTeléfono: \n\nQuedo atento. Gracias.`)}`;
 // Botón flotante de WhatsApp: el visitante elige con quién hablar
 const waContacts = [
-  { area: 'Ventas', name: 'Mauricio Colin', phone: '525539194580', label: '55 3919 4580' },
-  { area: 'Ingeniería', name: 'Ricardo López', phone: '525578528045', label: '55 7852 8045' },
+  { area: 'Ventas', phone: '525539194580', label: '55 3919 4580' },
+  { area: 'Ingeniería', phone: '525578528045', label: '55 7852 8045' },
 ];
-const waContactHref = (c) => `https://wa.me/${c.phone}?text=${encodeURIComponent(`Hola ${c.name}, me comunico desde el sitio web de CEAH. Me interesa recibir información.`)}`;
+const waContactHref = (c) => `https://wa.me/${c.phone}?text=${encodeURIComponent(`Hola equipo de ${c.area} de CEAH, me comunico desde el sitio web. Me interesa recibir información.`)}`;
 const sedes = '<p><b>Oficinas</b> · Tula de Allende, Hidalgo</p><p><b>Planta</b> · La Venta del Astillero, Jalisco</p>';
 
 const icons = {
@@ -154,7 +154,7 @@ document.querySelector('#site-footer').innerHTML = `
     <a class="float-btn mail" href="${mailHref}" aria-label="Enviar correo a CEAH">${svg('mail')}</a>
     <div class="wa-menu" id="wa-menu" hidden>
       <p>¿Con quién quieres hablar?</p>
-      ${waContacts.map((c) => `<a href="${waContactHref(c)}" target="_blank" rel="noopener"><span class="wa-ico">${whatsappSvg}</span><span><small>${c.area}</small><b>${c.name}</b>${c.label}</span></a>`).join('')}
+      ${waContacts.map((c) => `<a href="${waContactHref(c)}" target="_blank" rel="noopener"><span class="wa-ico">${whatsappSvg}</span><span><b>${c.area}</b>${c.label}</span></a>`).join('')}
     </div>
     <button class="float-btn wa" type="button" aria-label="Escribir por WhatsApp: elegir contacto" aria-controls="wa-menu" aria-expanded="false">${whatsappSvg}</button>
   </div>
