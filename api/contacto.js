@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 // Cada solicitud llega siempre a Ventas y Dirección; CONTACT_TO (separado por comas) agrega más destinatarios.
 const DESTINOS = [...new Set([
   'ventas@ceahestructural.com.mx',
-  'direccion@ceahestructurales.com',
+  'direccion@ceahestructural.com.mx',
   ...(process.env.CONTACT_TO || '').split(','),
 ].map((d) => d.trim().toLowerCase()).filter(Boolean))];
 

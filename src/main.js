@@ -22,7 +22,7 @@ const links = [
 ];
 
 const MAIL_VENTAS = 'ventas@ceahestructural.com.mx';
-const MAIL_DIRECCION = 'direccion@ceahestructurales.com';
+const MAIL_DIRECCION = 'direccion@ceahestructural.com.mx';
 // Números de WhatsApp: Ventas atiende informes de productos
 const waContacts = [
   { area: 'Ventas', phone: '525539194580', label: '55 3919 4580' },
