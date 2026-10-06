@@ -21,21 +21,22 @@ const links = [
   ['contacto', '/contacto/', 'Contacto'],
 ];
 
-const MAIL_VENTAS = 'ventas@ceahesteuctural.com.mx';
+const MAIL_VENTAS = 'ventas@ceahestructural.com.mx';
 const MAIL_DIRECCION = 'direccion@ceahestructurales.com';
-const WHATSAPP = '525633934633';
-const WHATSAPP_LABEL = '56 3393 4633';
-const mailHref = `mailto:${MAIL_VENTAS}?cc=${MAIL_DIRECCION}&subject=${encodeURIComponent('Solicitud de información CEAH')}`;
+// Números de WhatsApp: Ventas atiende informes de productos
+const waContacts = [
+  { area: 'Ventas', phone: '525539194580', label: '55 3919 4580' },
+  { area: 'Ingeniería', phone: '525578528045', label: '55 7852 8045' },
+];
+const WHATSAPP = waContacts[0].phone;
+const mailHref = `mailto:${MAIL_VENTAS},${MAIL_DIRECCION}?subject=${encodeURIComponent('Solicitud de información CEAH')}`;
 const waHref = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hola CEAH, me interesa recibir información sobre sus productos.')}`;
 // Mensajes predeterminados para pedir informes de un producto
 const productLabel = (p) => (p.code ? `${p.code} · ${p.name}` : p.name);
 const waFor = (p) => `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Hola CEAH, me interesa el producto *${productLabel(p)}*.\n\n¿Me pueden compartir precio, disponibilidad y tiempo de entrega?\n\nCantidad aproximada: \nCiudad de entrega: \n\nGracias.`)}`;
 const mailFor = (p) => `mailto:${MAIL_VENTAS}?cc=${MAIL_DIRECCION}&subject=${encodeURIComponent(`Solicitud de informes · ${productLabel(p)}`)}&body=${encodeURIComponent(`Hola equipo CEAH,\n\nMe interesa recibir información y cotización de:\n\n• Producto: ${productLabel(p)}\n• Cantidad aproximada: \n• Medidas o especificación requerida: \n• Ciudad de entrega: \n\nNombre: \nEmpresa: \nTeléfono: \n\nQuedo atento. Gracias.`)}`;
 // Botón flotante de WhatsApp: el visitante elige con quién hablar
-const waContacts = [
-  { area: 'Ventas', phone: '525539194580', label: '55 3919 4580' },
-  { area: 'Ingeniería', phone: '525578528045', label: '55 7852 8045' },
-];
+const waLinks = () => waContacts.map((c) => `<a href="${waContactHref(c)}" target="_blank" rel="noopener">WhatsApp ${c.area} ${c.label}</a>`).join('');
 const waContactHref = (c) => `https://wa.me/${c.phone}?text=${encodeURIComponent(`Hola equipo de ${c.area} de CEAH, me comunico desde el sitio web. Me interesa recibir información.`)}`;
 const sedes = '<p><b>Oficinas</b> · Tula de Allende, Hidalgo</p><p><b>Planta</b> · La Venta del Astillero, Jalisco</p>';
 
@@ -109,7 +110,7 @@ document.querySelector('#site-header').innerHTML = `
           ${links.map(([id, url, label]) => `<a href="${url}" class="${page === id ? 'active' : ''}"${page === id ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
         </div>
         <div class="menu-side">
-          <div><h4>Escríbenos</h4><a href="mailto:${MAIL_VENTAS}">${MAIL_VENTAS}</a><a href="mailto:${MAIL_DIRECCION}">${MAIL_DIRECCION}</a><a href="${waHref}" target="_blank" rel="noopener">WhatsApp ${WHATSAPP_LABEL}</a></div>
+          <div><h4>Escríbenos</h4><a href="mailto:${MAIL_VENTAS}">${MAIL_VENTAS}</a><a href="mailto:${MAIL_DIRECCION}">${MAIL_DIRECCION}</a>${waLinks()}</div>
           <div><h4>Productos</h4>${lines.map((l) => `<a href="${l.url}">${l.name}</a>`).join('')}</div>
           <a class="btn dark" href="/contacto/">Solicitar cotización ${svg('arrow')}</a>
         </div>
@@ -141,7 +142,7 @@ document.querySelector('#site-footer').innerHTML = `
         <h4>Contacto</h4>
         <a href="mailto:${MAIL_VENTAS}">${MAIL_VENTAS}</a>
         <a href="mailto:${MAIL_DIRECCION}">${MAIL_DIRECCION}</a>
-        <a href="${waHref}" target="_blank" rel="noopener">WhatsApp ${WHATSAPP_LABEL}</a>
+        ${waLinks()}
         ${sedes}
       </div>
     </div>
