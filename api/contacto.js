@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const { correoSolicitud } = require('./_correo');
 
 // Cada solicitud llega siempre a Ventas y Dirección; CONTACT_TO (separado por comas) agrega más destinatarios.
 const DESTINOS = [...new Set([
@@ -7,8 +8,11 @@ const DESTINOS = [...new Set([
   ...(process.env.CONTACT_TO || '').split(','),
 ].map((d) => d.trim().toLowerCase()).filter(Boolean))];
 
-const escapeHtml = (value = '') => String(value)
-  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// Cuentas SMTP de Titan (HostGator): se envía con Ventas y, si falla, con Dirección.
+const CUENTAS = [
+  [process.env.SMTP_USER, process.env.SMTP_PASS],
+  [process.env.SMTP_FALLBACK_USER, process.env.SMTP_FALLBACK_PASS],
+].filter(([user, pass]) => user && pass);
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -29,30 +33,25 @@ module.exports = async (req, res) => {
     return res.status(400).json({ ok: false, error: 'El mensaje es demasiado largo.' });
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.titan.email',
-    port: Number(process.env.SMTP_PORT || 465),
-    secure: true,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  });
+  const { html, text } = correoSolicitud({ nombre, empresa, correo, solucion: solucion || 'Asesoría técnica', mensaje });
+  const port = Number(process.env.SMTP_PORT || 465);
 
-  const filas = [
-    ['Nombre', nombre], ['Empresa', empresa || 'No indicada'], ['Correo', correo], ['Producto', solucion],
-  ];
-
-  try {
-    await transporter.sendMail({
-      from: `"Sitio web CEAH" <${process.env.SMTP_USER}>`,
-      to: DESTINOS,
-      replyTo: `"${nombre.replace(/"/g, '')}" <${correo}>`,
-      subject: `Solicitud web CEAH · ${empresa || nombre}`,
-      text: `${filas.map(([k, v]) => `${k}: ${v}`).join('\n')}\n\nMensaje:\n${mensaje}`,
-      html: `<table>${filas.map(([k, v]) => `<tr><td><b>${k}</b></td><td>${escapeHtml(v)}</td></tr>`).join('')}</table>`
-        + `<p><b>Mensaje:</b></p><p>${escapeHtml(mensaje).replace(/\n/g, '<br>')}</p>`,
-    });
-    return res.status(200).json({ ok: true });
-  } catch (error) {
-    console.error('Error enviando correo de contacto:', error);
-    return res.status(500).json({ ok: false, error: 'No pudimos enviar tu solicitud. Intenta de nuevo.' });
+  for (const [user, pass] of CUENTAS) {
+    try {
+      await nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.titan.email', port, secure: port === 465, auth: { user, pass },
+      }).sendMail({
+        from: `"Sitio web CEAH" <${user}>`,
+        to: DESTINOS,
+        replyTo: `"${nombre.replace(/["\r\n]/g, '')}" <${correo}>`,
+        subject: `Nueva solicitud web · ${solucion || 'Asesoría técnica'} · ${empresa || nombre}`,
+        text,
+        html,
+      });
+      return res.status(200).json({ ok: true });
+    } catch (error) {
+      console.error(`Error enviando correo de contacto con ${user}:`, error.message);
+    }
   }
+  return res.status(500).json({ ok: false, error: 'No pudimos enviar tu solicitud. Intenta de nuevo.' });
 };
